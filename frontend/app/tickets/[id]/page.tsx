@@ -9,13 +9,17 @@ function SentimentBadge({ sentiment }: { sentiment: string | null }) {
   if (!sentiment) return null
 
   const colors: Record<string, string> = {
-    positive: 'text-green-400',
-    neutral: 'text-yellow-400',
-    negative: 'text-red-400',
+    positive: 'bg-green-500/10 text-green-400',
+    neutral: 'bg-yellow-500/10 text-yellow-400',
+    negative: 'bg-red-500/10 text-red-400',
   }
 
   return (
-    <span className={`font-medium ${colors[sentiment] || 'text-gray-400'}`}>
+    <span
+      className={`inline-block rounded-full px-2.5 py-1 text-xs font-medium capitalize ${
+        colors[sentiment] || 'bg-gray-500/10 text-gray-400'
+      }`}
+    >
       {sentiment}
     </span>
   )
@@ -23,15 +27,50 @@ function SentimentBadge({ sentiment }: { sentiment: string | null }) {
 
 function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, string> = {
-    open: 'text-blue-400',
-    in_progress: 'text-yellow-400',
-    resolved: 'text-green-400',
-    closed: 'text-gray-500',
+    open: 'bg-blue-500/10 text-blue-400',
+    in_progress: 'bg-purple-500/10 text-purple-400',
+    resolved: 'bg-green-500/10 text-green-400',
+    closed: 'bg-gray-500/10 text-gray-400',
   }
 
   return (
-    <span className={`font-medium capitalize ${colors[status] || 'text-gray-400'}`}>
+    <span
+      className={`inline-block rounded-full px-2.5 py-1 text-xs font-medium capitalize ${
+        colors[status] || 'bg-gray-500/10 text-gray-400'
+      }`}
+    >
       {status.replace('_', ' ')}
+    </span>
+  )
+}
+
+function PriorityBadge({ priority }: { priority: string }) {
+  const colors: Record<string, string> = {
+    urgent: 'bg-red-500/10 text-red-400',
+    high: 'bg-orange-500/10 text-orange-400',
+    medium: 'bg-amber-500/10 text-amber-400',
+    low: 'bg-gray-500/10 text-gray-400',
+  }
+
+  return (
+    <span
+      className={`inline-block rounded-full px-2.5 py-1 text-xs font-medium capitalize ${
+        colors[priority] || 'bg-gray-500/10 text-gray-400'
+      }`}
+    >
+      {priority}
+    </span>
+  )
+}
+
+function CategoryBadge({ category }: { category: string | null }) {
+  if (!category) {
+    return <span className="text-sm text-gray-500">—</span>
+  }
+
+  return (
+    <span className="inline-block rounded-full bg-indigo-500/10 px-2.5 py-1 text-xs font-medium capitalize text-indigo-400">
+      {category}
     </span>
   )
 }
@@ -45,7 +84,6 @@ export default function TicketDetailPage() {
   const [ticket, setTicket] = useState<Ticket | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // ✅ AUTH + FETCH (clean + ESLint safe)
   useEffect(() => {
     const user = getUserFromToken()
 
@@ -72,7 +110,7 @@ export default function TicketDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-gray-950">
         <p className="text-gray-400">Loading ticket...</p>
       </div>
     )
@@ -83,9 +121,9 @@ export default function TicketDetailPage() {
   const aiReady = ticket.ai_category || ticket.ai_suggested_reply
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-950">
       <nav className="flex items-center justify-between border-b border-gray-800 px-6 py-4">
-        <span className="text-lg font-bold">Smart Support</span>
+        <span className="text-lg font-bold text-white">Smart Support</span>
 
         <button
           onClick={() => router.push('/dashboard')}
@@ -98,7 +136,7 @@ export default function TicketDetailPage() {
       <div className="mx-auto max-w-3xl space-y-6 p-6">
         {/* Ticket */}
         <div className="rounded-lg border border-gray-800 bg-gray-900 p-6">
-          <h1 className="mb-1 text-xl font-bold">{ticket.subject}</h1>
+          <h1 className="mb-1 text-xl font-bold text-white">{ticket.subject}</h1>
 
           <p className="mb-4 text-sm text-gray-400">
             {new Date(ticket.created_at).toLocaleString()}
@@ -107,27 +145,27 @@ export default function TicketDetailPage() {
           <p className="text-gray-300">{ticket.description}</p>
         </div>
 
-        {/* Status */}
+        {/* Status / Priority / Category */}
         <div className="grid grid-cols-3 gap-4">
           <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
-            <p className="mb-1 text-xs text-gray-500">Status</p>
+            <p className="mb-2 text-xs text-gray-500">Status</p>
             <StatusBadge status={ticket.status} />
           </div>
 
           <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
-            <p className="mb-1 text-xs text-gray-500">Priority</p>
-            <p className="font-medium capitalize">{ticket.priority}</p>
+            <p className="mb-2 text-xs text-gray-500">Priority</p>
+            <PriorityBadge priority={ticket.priority} />
           </div>
 
           <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
-            <p className="mb-1 text-xs text-gray-500">Category</p>
-            <p className="font-medium">{ticket.ai_category || '—'}</p>
+            <p className="mb-2 text-xs text-gray-500">Category</p>
+            <CategoryBadge category={ticket.ai_category} />
           </div>
         </div>
 
         {/* AI */}
         <div className="rounded-lg border border-gray-800 bg-gray-900 p-6">
-          <h2 className="mb-4 flex items-center gap-2 font-semibold">
+          <h2 className="mb-4 flex items-center gap-2 font-semibold text-white">
             🤖 AI Analysis
 
             {!aiReady && (
@@ -140,7 +178,7 @@ export default function TicketDetailPage() {
           {aiReady ? (
             <div className="space-y-4">
               <div>
-                <p className="mb-1 text-xs text-gray-500">Sentiment</p>
+                <p className="mb-2 text-xs text-gray-500">Sentiment</p>
                 <SentimentBadge sentiment={ticket.ai_sentiment} />
               </div>
 
