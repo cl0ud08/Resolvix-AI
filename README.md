@@ -210,31 +210,6 @@ Resolvix-AI
 
 ---
 
-# 📸 Application Screenshots
-
-## Dashboard
-
-<p align="center">
-<img src="images/dashboard.png" width="95%">
-</p>
-
----
-
-## Create Ticket
-
-<p align="center">
-<img src="images/create-ticket.png" width="95%">
-</p>
-
----
-
-## AI Analysis
-
-<p align="center">
-<img src="images/ai-analysis.png" width="95%">
-</p>
-
----
 
 # 🚀 Getting Started
 
