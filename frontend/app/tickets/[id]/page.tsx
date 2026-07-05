@@ -22,26 +22,33 @@ function SentimentBadge({ sentiment }: { sentiment: string | null }) {
 }
 
 export default function TicketDetailPage() {
-  const { id } = useParams()
+  const params = useParams()
+  const id = Array.isArray(params?.id) ? params.id[0] : params?.id
+
   const router = useRouter()
 
   const [ticket, setTicket] = useState<Ticket | null>(null)
   const [loading, setLoading] = useState(true)
 
+  // 1️⃣ AUTH CHECK
   useEffect(() => {
     const user = getUserFromToken()
 
     if (!user) {
-      window.location.href = '/login'
-      return
+      router.replace('/login')
     }
+  }, [router])
+
+  // 2️⃣ FETCH TICKET
+  useEffect(() => {
+    if (!id) return
 
     async function loadTicket() {
       try {
-        const data = await getTicket(id as string)
+        const data = await getTicket(id)
         setTicket(data)
       } catch {
-        router.push('/dashboard')
+        router.replace('/dashboard')
       } finally {
         setLoading(false)
       }
@@ -68,7 +75,7 @@ export default function TicketDetailPage() {
         <span className="text-lg font-bold">Smart Support</span>
 
         <button
-          onClick={() => router.back()}
+          onClick={() => router.push('/dashboard')}
           className="text-sm text-gray-400 transition-colors hover:text-white"
         >
           ← Back
@@ -99,7 +106,6 @@ export default function TicketDetailPage() {
               className="rounded-lg border border-gray-800 bg-gray-900 p-4"
             >
               <p className="mb-1 text-xs text-gray-500">{label}</p>
-
               <p className="font-medium capitalize">{value}</p>
             </div>
           ))}
@@ -121,7 +127,6 @@ export default function TicketDetailPage() {
             <div className="space-y-4">
               <div>
                 <p className="mb-1 text-xs text-gray-500">Sentiment</p>
-
                 <SentimentBadge sentiment={ticket.ai_sentiment} />
               </div>
 

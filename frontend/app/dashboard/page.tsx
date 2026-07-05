@@ -26,14 +26,17 @@ const statusConfig: Record<string, { label: string; className: string }> = {
 export default function DashboardPage() {
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
-    const user = getUserFromToken()
+    const u = getUserFromToken()
 
-    if (!user) {
+    if (!u) {
       window.location.href = '/login'
       return
     }
+
+    setUser(u)
 
     async function loadTickets() {
       try {
@@ -64,7 +67,7 @@ export default function DashboardPage() {
 
           <Link
             href="/tickets/new"
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
           >
             + New Ticket
           </Link>
@@ -86,7 +89,7 @@ export default function DashboardPage() {
 
             <Link
               href="/tickets/new"
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
             >
               Submit your first ticket
             </Link>
@@ -103,7 +106,7 @@ export default function DashboardPage() {
                 <Link
                   key={ticket.id}
                   href={`/tickets/${ticket.id}`}
-                  className="flex items-center justify-between rounded-xl border border-slate-200 bg-white p-4 transition-all hover:border-blue-300 hover:shadow-sm"
+                  className="flex items-center justify-between rounded-xl border border-slate-200 bg-white p-4 hover:border-blue-300 hover:shadow-sm"
                 >
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-medium text-slate-900">
@@ -128,15 +131,11 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="ml-4 flex shrink-0 gap-2">
-                    <span
-                      className={`rounded-full px-2.5 py-1 text-xs font-medium ${priority.className}`}
-                    >
+                    <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${priority.className}`}>
                       {priority.label}
                     </span>
 
-                    <span
-                      className={`rounded-full px-2.5 py-1 text-xs font-medium ${status.className}`}
-                    >
+                    <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${status.className}`}>
                       {status.label}
                     </span>
                   </div>
