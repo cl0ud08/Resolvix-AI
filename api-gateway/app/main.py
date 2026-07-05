@@ -60,8 +60,9 @@ async def proxy(path: str, request: Request):
     # Forward the request — preserving method, headers, body, query params
     body = await request.body()
     headers = dict(request.headers)
-    headers.pop("host", None)  # remove host header — let httpx set it correctly
-
+    headers.pop("host", None)
+    headers.pop("accept-encoding", None)
+    headers.pop("content-length", None)
     async with httpx.AsyncClient(timeout=30.0) as client:
         resp = await client.request(
             method=request.method,
