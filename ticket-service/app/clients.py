@@ -1,14 +1,15 @@
 import json
 import logging
-import os
 import httpx
 import redis
+
+from app.config import settings
 
 logger = logging.getLogger(__name__)
 
 
-REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
-AI_SERVICE_URL = "http://localhost:8003"
+REDIS_URL = settings.REDIS_URL
+AI_SERVICE_URL = settings.AI_SERVICE_URL
 
 redis_client = redis.from_url(REDIS_URL, decode_responses=True, ssl_cert_reqs=None)
 
@@ -18,6 +19,8 @@ def call_ai_classify(subject: str, description: str) -> dict | None:
     Calls ai-triage-service synchronously to classify a ticket.
     Returns None if the call fails — deliberately non-blocking,
     so a slow or down AI service never prevents ticket creation.
+    Note: not currently used by main.py, which uses the async
+    Redis pub/sub flow via publish_ticket_event instead.
     """
     try:
         with httpx.Client(timeout=10.0) as client:
