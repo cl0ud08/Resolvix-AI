@@ -42,7 +42,7 @@ The platform follows an **event-driven architecture** where services communicate
 > Replace the image below with your architecture diagram.
 
 <p align="center">
-<img src="images/architecture.png" width="100%">
+<img src="images/system-design.png" width="100%">
 </p>
 
 ---
