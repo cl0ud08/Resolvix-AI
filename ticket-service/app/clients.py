@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 AI_SERVICE_URL = "http://localhost:8003"
 
-redis_client = redis.from_url(REDIS_URL, decode_responses=True)
+redis_client = redis.from_url(REDIS_URL, decode_responses=True, ssl_cert_reqs=None)
 
 
 def call_ai_classify(subject: str, description: str) -> dict | None:

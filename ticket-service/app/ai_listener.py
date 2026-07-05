@@ -55,7 +55,7 @@ def listen_for_ai_events() -> None:
     ticket-service no longer waits for AI — it just listens
     for results when they arrive.
     """
-    r = redis.from_url(REDIS_URL, decode_responses=True)
+    r = redis.from_url(REDIS_URL, decode_responses=True, ssl_cert_reqs=None)
     pubsub = r.pubsub()
     pubsub.subscribe("ai_events")
     logger.info("ticket-service: subscribed to ai_events channel")

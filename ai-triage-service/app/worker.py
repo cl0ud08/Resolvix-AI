@@ -75,7 +75,7 @@ def listen_for_ticket_events() -> None:
     This is the event-driven counterpart to the synchronous
     HTTP /ai/classify route we used in v1/v2.
     """
-    r = redis.from_url(REDIS_URL, decode_responses=True)
+    r = redis.from_url(REDIS_URL, decode_responses=True, ssl_cert_reqs=None)
     pubsub = r.pubsub()
     pubsub.subscribe("ticket_events")
     logger.info("ai-triage-service worker: subscribed to ticket_events")
