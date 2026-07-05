@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { listTickets, Ticket } from '@/lib/api'
 import { getUserFromToken } from '@/lib/auth'
@@ -26,17 +27,16 @@ const statusConfig: Record<string, { label: string; className: string }> = {
 export default function DashboardPage() {
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState<any>(null)
+
+  const router = useRouter()
 
   useEffect(() => {
-    const u = getUserFromToken()
+    const user = getUserFromToken()
 
-    if (!u) {
-      window.location.href = '/login'
+    if (!user) {
+      router.replace('/login')
       return
     }
-
-    setUser(u)
 
     async function loadTickets() {
       try {
@@ -48,7 +48,7 @@ export default function DashboardPage() {
     }
 
     loadTickets()
-  }, [])
+  }, [router])
 
   return (
     <div className="flex min-h-screen bg-slate-50">
@@ -131,11 +131,15 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="ml-4 flex shrink-0 gap-2">
-                    <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${priority.className}`}>
+                    <span
+                      className={`rounded-full px-2.5 py-1 text-xs font-medium ${priority.className}`}
+                    >
                       {priority.label}
                     </span>
 
-                    <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${status.className}`}>
+                    <span
+                      className={`rounded-full px-2.5 py-1 text-xs font-medium ${status.className}`}
+                    >
                       {status.label}
                     </span>
                   </div>

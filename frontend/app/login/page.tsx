@@ -11,7 +11,7 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setError('')
     setLoading(true)
@@ -20,7 +20,6 @@ export default function LoginPage() {
       const res = await login(email, password)
       saveToken(res.access_token)
 
-      // Redirect based on role
       const user = getUserFromToken()
 
       if (user?.role === 'customer') {

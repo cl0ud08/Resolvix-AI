@@ -30,17 +30,15 @@ export default function TicketDetailPage() {
   const [ticket, setTicket] = useState<Ticket | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // 1️⃣ AUTH CHECK
+  // ✅ AUTH + FETCH (clean + ESLint safe)
   useEffect(() => {
     const user = getUserFromToken()
 
     if (!user) {
       router.replace('/login')
+      return
     }
-  }, [router])
 
-  // 2️⃣ FETCH TICKET
-  useEffect(() => {
     if (!id) return
 
     async function loadTicket() {

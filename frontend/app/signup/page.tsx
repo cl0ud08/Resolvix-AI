@@ -2,15 +2,25 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { signup, login } from '@/lib/api'
 import { saveToken } from '@/lib/auth'
 
+type Role = 'customer' | 'agent'
+
 export default function SignupPage() {
-  const [form, setForm] = useState({
+  const router = useRouter()
+
+  const [form, setForm] = useState<{
+    email: string
+    password: string
+    full_name: string
+    role: Role
+  }>({
     email: '',
     password: '',
     full_name: '',
-    role: 'customer' as const,
+    role: 'customer',
   })
 
   const [error, setError] = useState('')
@@ -19,13 +29,15 @@ export default function SignupPage() {
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) {
+    const { name, value } = e.target
+
     setForm((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }))
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setError('')
     setLoading(true)
@@ -37,7 +49,7 @@ export default function SignupPage() {
       const res = await login(form.email, form.password)
       saveToken(res.access_token)
 
-      window.location.href = '/dashboard'
+      router.replace('/dashboard')
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Signup failed')
     } finally {
@@ -122,10 +134,7 @@ export default function SignupPage() {
 
         <p className="mt-6 text-center text-gray-400">
           Already have an account?{' '}
-          <Link
-            href="/login"
-            className="text-blue-400 hover:text-blue-300"
-          >
+          <Link href="/login" className="text-blue-400 hover:text-blue-300">
             Sign in
           </Link>
         </p>
