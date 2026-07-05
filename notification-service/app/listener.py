@@ -20,10 +20,7 @@ def _format_message(event: dict) -> str:
 
 
 def listen_for_ticket_events() -> None:
-    r = redis.from_url(
-    settings.REDIS_URL,
-    decode_responses=True
-)
+    r = redis.from_url(settings.REDIS_URL, decode_responses=True, ssl_cert_reqs=None)
     pubsub = r.pubsub()
     pubsub.subscribe("ticket_events")
     logger.info("notification-service: subscribed to ticket_events channel")
