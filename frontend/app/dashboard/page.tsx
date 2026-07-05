@@ -25,10 +25,10 @@ const statusConfig: Record<string, { label: string; className: string }> = {
 }
 
 export default function DashboardPage() {
+  const router = useRouter()
+
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [loading, setLoading] = useState(true)
-
-  const router = useRouter()
 
   useEffect(() => {
     const user = getUserFromToken()
@@ -55,6 +55,7 @@ export default function DashboardPage() {
       <Sidebar />
 
       <main className="flex-1 p-8">
+
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">
@@ -99,6 +100,7 @@ export default function DashboardPage() {
             {tickets.map((ticket) => {
               const priority =
                 priorityConfig[ticket.priority] ?? priorityConfig.low
+
               const status =
                 statusConfig[ticket.status] ?? statusConfig.open
 
@@ -148,6 +150,7 @@ export default function DashboardPage() {
             })}
           </div>
         )}
+
       </main>
     </div>
   )
