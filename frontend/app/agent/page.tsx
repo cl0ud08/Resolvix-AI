@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { listTickets, updateTicket, listNotifications, Ticket, Notification } from '@/lib/api'
 import { getUserFromToken } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
@@ -27,33 +27,44 @@ export default function AgentPage() {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [showNotifications, setShowNotifications] = useState(false)
   const user = getUserFromToken()
+  const loadTickets = useCallback(async () => {
+    try {
+      const data = await listTickets()
+  
+      setTickets(data)
+  
+      setSelected(prev => {
+        if (!prev) return null
+        return data.find(t => t.id === prev.id) || prev
+      })
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
     if (!user || user.role === 'customer') {
       window.location.href = '/login'
       return
     }
+  
     loadTickets()
+  
     const interval = setInterval(loadTickets, 10000)
+  
     return () => clearInterval(interval)
-  }, [])
+  }, [user, loadTickets])
 
   useEffect(() => {
-    listNotifications().then(setNotifications)
+    async function loadNotifications() {
+      const data = await listNotifications()
+      setNotifications(data)
+    }
+  
+    loadNotifications()
   }, [tickets])
 
-  async function loadTickets() {
-    try {
-      const data = await listTickets()
-      setTickets(data)
-      if (selected) {
-        const refreshed = data.find(t => t.id === selected.id)
-        if (refreshed) setSelected(refreshed)
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
+  
 
   async function handleStatusUpdate(ticketId: string, status: string) {
     setUpdating(true)
