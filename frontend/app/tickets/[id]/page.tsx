@@ -21,6 +21,21 @@ function SentimentBadge({ sentiment }: { sentiment: string | null }) {
   )
 }
 
+function StatusBadge({ status }: { status: string }) {
+  const colors: Record<string, string> = {
+    open: 'text-blue-400',
+    in_progress: 'text-yellow-400',
+    resolved: 'text-green-400',
+    closed: 'text-gray-500',
+  }
+
+  return (
+    <span className={`font-medium capitalize ${colors[status] || 'text-gray-400'}`}>
+      {status.replace('_', ' ')}
+    </span>
+  )
+}
+
 export default function TicketDetailPage() {
   const params = useParams()
   const id = Array.isArray(params?.id) ? params.id[0] : params?.id
@@ -94,19 +109,20 @@ export default function TicketDetailPage() {
 
         {/* Status */}
         <div className="grid grid-cols-3 gap-4">
-          {[
-            { label: 'Status', value: ticket.status },
-            { label: 'Priority', value: ticket.priority },
-            { label: 'Category', value: ticket.ai_category || '—' },
-          ].map(({ label, value }) => (
-            <div
-              key={label}
-              className="rounded-lg border border-gray-800 bg-gray-900 p-4"
-            >
-              <p className="mb-1 text-xs text-gray-500">{label}</p>
-              <p className="font-medium capitalize">{value}</p>
-            </div>
-          ))}
+          <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
+            <p className="mb-1 text-xs text-gray-500">Status</p>
+            <StatusBadge status={ticket.status} />
+          </div>
+
+          <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
+            <p className="mb-1 text-xs text-gray-500">Priority</p>
+            <p className="font-medium capitalize">{ticket.priority}</p>
+          </div>
+
+          <div className="rounded-lg border border-gray-800 bg-gray-900 p-4">
+            <p className="mb-1 text-xs text-gray-500">Category</p>
+            <p className="font-medium">{ticket.ai_category || '—'}</p>
+          </div>
         </div>
 
         {/* AI */}
