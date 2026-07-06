@@ -8,7 +8,7 @@ from app.database import Base, engine, get_db
 from app.models import Ticket, TicketMessage, SenderType
 from app.schemas import TicketCreate, TicketUpdate, TicketOut, MessageCreate, MessageOut
 from app.auth import get_current_user, CurrentUser
-from app.clients import publish_ticket_event
+from app.clients import publish_ticket_event, get_ai_reply
 from app.ai_listener import start_ai_listener_thread
 
 Base.metadata.create_all(bind=engine)
@@ -136,6 +136,25 @@ def add_message(
     db.add(msg)
     db.commit()
     db.refresh(msg)
+
+    # If the customer sent this message, get an AI reply and save it too
+    if sender_type == SenderType.customer:
+        ai_reply_text = get_ai_reply(
+            subject=ticket.subject,
+            description=ticket.description,
+            customer_message=payload.message,
+        )
+
+        if ai_reply_text:
+            ai_msg = TicketMessage(
+                ticket_id=ticket_id,
+                sender_type=SenderType.ai,
+                sender_id=None,
+                message=ai_reply_text,
+            )
+            db.add(ai_msg)
+            db.commit()
+
     return msg
 
 
