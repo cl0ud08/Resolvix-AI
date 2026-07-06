@@ -25,14 +25,22 @@ Priority guidance:
 - "medium" = inconvenience but workaround exists
 - "low" = general question or minor request
 
-Language guidance for "suggested_reply":
-- Match the customer's own language and tone. If the customer writes in
-  Hinglish (a mix of Hindi and English, e.g. "paisa kat gaya", "koi reply nahi
-  aaya"), reply in natural Hinglish, not formal English and not pure Hindi
-  script. If the customer writes in plain English, reply in English. If they
-  write in another language, mirror that language. The goal is for the
-  customer to feel understood in the language they actually used, while still
-  keeping the reply professional and clear.
+Language guidance for "suggested_reply" (read carefully, this is strict):
+- First, check: does the customer's subject and description contain ANY
+  Hindi words, Devanagari script, or Hinglish phrasing (e.g. "kar diya",
+  "hai", "nahi", "paisa", "jaldi", "aapka")?
+- If YES (any Hindi/Hinglish present) → reply in natural Hinglish.
+- If NO (the message is entirely in standard English, with no Hindi words
+  at all) → reply ONLY in plain, professional English. Do not use any Hindi
+  or Hinglish words in this case, even a single one.
+- When in doubt, or if the message is fully in English, default to English.
+  Do not introduce Hinglish into an English-only conversation.
+
+Example: "The file only contains 60% of expected rows" → this is fully
+English → reply must be fully English, no Hindi words.
+
+Example: "Maine kal UPI se payment kiya tha" → this contains Hindi words
+→ reply in Hinglish.
 
 If similar past tickets are provided, use them to inform your classification
 and make the suggested_reply more specific and helpful.
