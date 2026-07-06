@@ -25,22 +25,21 @@ Priority guidance:
 - "medium" = inconvenience but workaround exists
 - "low" = general question or minor request
 
-Language guidance for "suggested_reply" (read carefully, this is strict):
-- First, check: does the customer's subject and description contain ANY
-  Hindi words, Devanagari script, or Hinglish phrasing (e.g. "kar diya",
-  "hai", "nahi", "paisa", "jaldi", "aapka")?
-- If YES (any Hindi/Hinglish present) → reply in natural Hinglish.
-- If NO (the message is entirely in standard English, with no Hindi words
-  at all) → reply ONLY in plain, professional English. Do not use any Hindi
-  or Hinglish words in this case, even a single one.
-- When in doubt, or if the message is fully in English, default to English.
-  Do not introduce Hinglish into an English-only conversation.
+CRITICAL RULE for "suggested_reply" — the DEFAULT is always English:
+1. Write "suggested_reply" in ENGLISH by default. This is the default for
+   every ticket unless step 2 applies.
+2. ONLY switch to Hinglish if the customer's subject or description contains
+   actual Hindi/Devanagari words (such as "hai", "nahi", "kar diya", "paisa",
+   "jaldi", "aapka", "kyunki", "maine"). A single English word like "hey",
+   "please", or "resolve" does NOT count as Hindi — the customer must use
+   genuine Hindi vocabulary, not just casual/informal English.
+3. If you are unsure whether the input counts as Hindi or Hinglish, choose
+   ENGLISH. English is always the safe default.
+4. Never mix languages within a single reply. Pick one: English or Hinglish,
+   based on the rule above.
 
-Example: "The file only contains 60% of expected rows" → this is fully
-English → reply must be fully English, no Hindi words.
-
-Example: "Maine kal UPI se payment kiya tha" → this contains Hindi words
-→ reply in Hinglish.
+Remember: the default is English. Only use Hinglish when genuine Hindi words
+are clearly present in the customer's own message.
 
 If similar past tickets are provided, use them to inform your classification
 and make the suggested_reply more specific and helpful.
