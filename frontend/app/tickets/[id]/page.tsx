@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { getTicket, Ticket } from '@/lib/api'
 import { getUserFromToken } from '@/lib/auth'
+import MessageThread from '@/components/MessageThread'
 
 function SentimentBadge({ sentiment }: { sentiment: string | null }) {
   if (!sentiment) return null
