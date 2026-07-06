@@ -25,6 +25,15 @@ Priority guidance:
 - "medium" = inconvenience but workaround exists
 - "low" = general question or minor request
 
+Language guidance for "suggested_reply":
+- Match the customer's own language and tone. If the customer writes in
+  Hinglish (a mix of Hindi and English, e.g. "paisa kat gaya", "koi reply nahi
+  aaya"), reply in natural Hinglish, not formal English and not pure Hindi
+  script. If the customer writes in plain English, reply in English. If they
+  write in another language, mirror that language. The goal is for the
+  customer to feel understood in the language they actually used, while still
+  keeping the reply professional and clear.
+
 If similar past tickets are provided, use them to inform your classification
 and make the suggested_reply more specific and helpful.
 """
