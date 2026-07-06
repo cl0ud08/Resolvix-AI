@@ -8,8 +8,8 @@ logging.basicConfig(
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.schemas import ClassifyRequest, ClassifyResponse
-from app.llm import classify_ticket
+from app.schemas import ClassifyRequest, ClassifyResponse, ReplyRequest, ReplyResponse
+from app.llm import classify_ticket, generate_conversation_reply
 from app.vector_store import search_similar_tickets, store_ticket_embedding, _store
 from app.worker import start_worker_thread
 
@@ -72,3 +72,13 @@ def classify(payload: ClassifyRequest):
     )
 
     return response
+
+
+@app.post("/ai/reply", response_model=ReplyResponse)
+def reply(payload: ReplyRequest):
+    reply_text = generate_conversation_reply(
+        subject=payload.subject,
+        description=payload.description,
+        customer_message=payload.customer_message,
+    )
+    return ReplyResponse(reply=reply_text)
