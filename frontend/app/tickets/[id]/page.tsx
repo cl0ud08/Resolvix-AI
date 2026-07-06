@@ -202,6 +202,8 @@ export default function TicketDetailPage() {
             </p>
           )}
         </div>
+
+        <MessageThread ticketId={ticket.id} />
       </div>
     </div>
   )
