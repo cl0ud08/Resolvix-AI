@@ -5,8 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from app.database import Base, engine, get_db
-from app.models import Ticket
-from app.schemas import TicketCreate, TicketUpdate, TicketOut
+from app.models import Ticket, TicketMessage, SenderType
+from app.schemas import TicketCreate, TicketUpdate, TicketOut, MessageCreate, MessageOut
 from app.auth import get_current_user, CurrentUser
 from app.clients import publish_ticket_event
 from app.ai_listener import start_ai_listener_thread
@@ -109,3 +109,52 @@ def update_ticket(
     db.commit()
     db.refresh(ticket)
     return ticket
+
+
+@app.post("/tickets/{ticket_id}/messages", response_model=MessageOut, status_code=201)
+def add_message(
+    ticket_id: uuid.UUID,
+    payload: MessageCreate,
+    db: Session = Depends(get_db),
+    user: CurrentUser = Depends(get_current_user),
+):
+    ticket = db.query(Ticket).filter(Ticket.id == ticket_id).first()
+    if not ticket:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+
+    if user.role == "customer" and str(ticket.customer_id) != user.user_id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    sender_type = SenderType.customer if user.role == "customer" else SenderType.agent
+
+    msg = TicketMessage(
+        ticket_id=ticket_id,
+        sender_type=sender_type,
+        sender_id=uuid.UUID(user.user_id),
+        message=payload.message,
+    )
+    db.add(msg)
+    db.commit()
+    db.refresh(msg)
+    return msg
+
+
+@app.get("/tickets/{ticket_id}/messages", response_model=list[MessageOut])
+def list_messages(
+    ticket_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    user: CurrentUser = Depends(get_current_user),
+):
+    ticket = db.query(Ticket).filter(Ticket.id == ticket_id).first()
+    if not ticket:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+
+    if user.role == "customer" and str(ticket.customer_id) != user.user_id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    return (
+        db.query(TicketMessage)
+        .filter(TicketMessage.ticket_id == ticket_id)
+        .order_by(TicketMessage.created_at.asc())
+        .all()
+    )
